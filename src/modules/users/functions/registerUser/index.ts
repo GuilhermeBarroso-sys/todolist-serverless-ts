@@ -9,7 +9,9 @@ const registerUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (e
 		const userRepository = new UserRepository();
 		const hashedPassword = await hash(password, 10);
 		const alreadyExists = await userRepository.findByEmail(email);
-		console.log(alreadyExists);
+		if(alreadyExists.length > 0) {
+			throw new Error("this email already been used!");
+		}
 		await userRepository.create({
 			name,
 			email,

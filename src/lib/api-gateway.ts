@@ -11,6 +11,7 @@ export const formatJSONResponse = (response: unknown, statusCode = 200) => {
 	};
 };
 
+
 export const bodyParams = (eventBody: string, requiredParams : Array<string> = []) => {
 	const body = JSON.parse(eventBody);
 	if(!body) {

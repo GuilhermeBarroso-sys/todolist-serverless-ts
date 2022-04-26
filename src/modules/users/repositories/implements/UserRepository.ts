@@ -38,14 +38,16 @@ class UserRepository implements IUserRepository{
 		return user.Item;
 	}
 
-	async findByEmail(email: string) : Promise<DynamoDB.DocumentClient.AttributeMap> {
-		const user = await this.dynamoDB.get({
-			Key: {
-				email
-			},
+	async findByEmail(email: string) : Promise<DynamoDB.DocumentClient.ItemList> {
+		const user = await this.dynamoDB.scan({
 			TableName: this.tableName,
+			FilterExpression: 'email = :email',
+			ExpressionAttributeValues: {
+				":email": email
+			},
+		
 		}).promise();
-		return user.Item;
+		return user.Items;
 	}
 }
 
