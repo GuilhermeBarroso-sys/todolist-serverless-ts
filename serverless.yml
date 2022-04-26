@@ -3,7 +3,7 @@ service: aws-nodejs-typescript-s3
 plugins:
   - serverless-esbuild
   - serverless-offline
-
+  - serverless-dotenv-plugin
 provider:
   name: aws
   runtime: nodejs12.x
@@ -21,12 +21,15 @@ provider:
         - dynamodb:PutItem
       Resource: "*"
 custom:
-  tableName: Users
+  dotenv:
+    path: .env.${opt:stage, 'dev'}.yml
+  tableName: ${opt:stage, 'dev'}_users
   esbuild:
     bundle: true
     minify: false
     watch:
       pattern: ['src/**/*.ts']
+      ignore: ['.esbuild', 'dist', 'node_modules', '.serverless']
 package: 
   individually: true
 resources:
@@ -35,7 +38,6 @@ resources:
           Type: AWS::DynamoDB::Table
           Properties:
             TableName: ${self:custom.tableName}
-
             AttributeDefinitions:
               - AttributeName: id
                 AttributeType: S
