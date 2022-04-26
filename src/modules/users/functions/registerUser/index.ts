@@ -19,7 +19,7 @@ const registerUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (e
 		});
 		return formatJSONResponse('', 201);
 	} catch(err) {
-		return formatJSONResponse({err: err.message}, 500);
+		return formatJSONResponse({err: err.message}, 400);
 	}
 };
 
