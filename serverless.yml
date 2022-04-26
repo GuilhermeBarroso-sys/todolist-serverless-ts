@@ -1,0 +1,68 @@
+service: aws-nodejs-typescript-s3
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  memorySize: 128 # optional, in MB, default is 1024
+  timeout: 10 # optional, in seconds, default is 6
+  stage: ${opt:stage, 'dev'}
+  region: sa-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:*
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: "*"
+custom:
+  tableName: Users
+  esbuild:
+    bundle: true
+    minify: false
+    watch:
+      pattern: ['src/**/*.ts']
+package: 
+  individually: true
+resources:
+      Resources:
+        Users:
+          Type: AWS::DynamoDB::Table
+          Properties:
+            TableName: ${self:custom.tableName}
+
+            AttributeDefinitions:
+              - AttributeName: id
+                AttributeType: S
+              - AttributeName: sk
+                AttributeType: S
+            KeySchema:
+              - AttributeName: id
+                KeyType: HASH
+              - AttributeName: sk
+                KeyType: RANGE
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+
+functions:
+  registerUser:
+    handler: handler.registerUser
+    events:
+      - http:
+          path: users
+          method: post
+  findUser:
+    handler: handler.findUser
+    events:
+      - http:
+          path: users/{id}
+          method: get
+      
+
+
