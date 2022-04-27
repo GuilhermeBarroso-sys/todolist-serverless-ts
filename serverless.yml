@@ -68,8 +68,6 @@ functions:
           path: users/{id}
           method: get
           authorizer: authorizerUser # execute this before posts.create!
-          identitySource: method.request.header.Authorization
-          resultTtlInSeconds: 3600
   
 
   authenticateUser:
