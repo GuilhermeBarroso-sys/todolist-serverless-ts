@@ -43,6 +43,8 @@ resources:
                 AttributeType: S
               - AttributeName: sk
                 AttributeType: S
+              - AttributeName: email
+                AttributeType: S
             KeySchema:
               - AttributeName: id
                 KeyType: HASH
@@ -51,7 +53,16 @@ resources:
             ProvisionedThroughput:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1
-
+            GlobalSecondaryIndexes:
+            - IndexName: email-index
+              KeySchema:
+              - AttributeName: email
+                KeyType: HASH
+              Projection:
+                ProjectionType: ALL
+              ProvisionedThroughput:
+                ReadCapacityUnits: 1
+                WriteCapacityUnits: 1
 functions:
   authorizerUser:
       handler: handler.authorizerUser
@@ -68,6 +79,12 @@ functions:
           path: users/{id}
           method: get
           authorizer: authorizerUser # execute this before posts.create!
+  findAll:
+    handler: handler.findAll
+    events:
+      - http:
+          path: users
+          method: get
   
 
   authenticateUser:

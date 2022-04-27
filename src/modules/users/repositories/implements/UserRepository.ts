@@ -25,7 +25,15 @@ class UserRepository implements IUserRepository{
 		}).promise();
 	}
 	async findAll(): Promise<IUser[]> {
-		throw new Error('Method not implemented.');
+		// const users = await this.dynamoDB.query({
+		// 	TableName: this.tableName,
+		// 	IndexName: "emailIndex",
+		// 	KeyConditionExpression: 'begins_with(sk, :user)',
+		// 	ExpressionAttributeValues: {
+		// 		":user": "User#",
+		// 	}
+		// }).promise();
+		// console.log(users);
 	}
 	async findOne(id: string) : Promise<DynamoDB.DocumentClient.AttributeMap>{
 		const user = await this.dynamoDB.get({
@@ -39,15 +47,15 @@ class UserRepository implements IUserRepository{
 	}
 
 	async findByEmail(email: string) : Promise<DynamoDB.DocumentClient.AttributeMap|false> {
-		const user = await this.dynamoDB.scan({
+		const user = await this.dynamoDB.query({
 			TableName: this.tableName,
-			FilterExpression: 'email = :email',
-			ExpressionAttributeValues: {
+			IndexName: "email-index",
+			KeyConditionExpression: "email = :email",
+			ExpressionAttributeValues:{
 				":email": email
-			},
-		
+			}
 		}).promise();
-		return user.Items.length == 1 ? user.Items[0] : false;
+		return user.Items.length >= 1 ? user.Items[0] : false;
 	}
 }
 
