@@ -53,16 +53,6 @@ resources:
             ProvisionedThroughput:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1
-            GlobalSecondaryIndexes:
-            - IndexName: email-index
-              KeySchema:
-              - AttributeName: email
-                KeyType: HASH
-              Projection:
-                ProjectionType: ALL
-              ProvisionedThroughput:
-                ReadCapacityUnits: 1
-                WriteCapacityUnits: 1
 functions:
   authorizerUser:
       handler: handler.authorizerUser

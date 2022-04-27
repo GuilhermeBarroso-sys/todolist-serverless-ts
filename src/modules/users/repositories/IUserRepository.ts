@@ -1,4 +1,4 @@
-import {  DynamoDB } from "aws-sdk";
+import { DynamoDB } from "aws-sdk";
 
 export interface IUser {
 	id?: string;
@@ -9,7 +9,7 @@ export interface IUser {
 }
 export interface IUserRepository {
 	create({id,name,email,password} : IUser) : Promise<void>
-	findAll() : Promise<IUser[]>
+	findAll() : Promise<DynamoDB.DocumentClient.ItemList>
 	findOne(id: string) : Promise<DynamoDB.DocumentClient.AttributeMap>
 	findByEmail(email: string) : Promise<DynamoDB.DocumentClient.AttributeMap|false>
 }

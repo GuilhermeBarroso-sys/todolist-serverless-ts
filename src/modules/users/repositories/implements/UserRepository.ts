@@ -2,6 +2,13 @@ import {DynamoDB} from 'aws-sdk';
 import {v4 as uuid}  from 'uuid';
 import { isInvalidParam } from '../../../../lib/api-gateway';
 import { IUser, IUserRepository } from '../IUserRepository';
+interface IDTOUser {
+	id: string;
+	sk: string;
+	name: string;
+	email: string;
+	password: string;
+}
 class UserRepository implements IUserRepository{
 	private tableName = process.env.dynamodb_table;
 	private dynamoDB : DynamoDB.DocumentClient;
@@ -16,7 +23,7 @@ class UserRepository implements IUserRepository{
 		await this.dynamoDB.put({
 			Item: {
 				id,
-				sk: `User#${id}`,
+				sk: `User`,
 				name,
 				email,
 				password
@@ -24,16 +31,29 @@ class UserRepository implements IUserRepository{
 			TableName: this.tableName
 		}).promise();
 	}
-	async findAll(): Promise<IUser[]> {
-		// const users = await this.dynamoDB.query({
-		// 	TableName: this.tableName,
-		// 	IndexName: "emailIndex",
-		// 	KeyConditionExpression: 'begins_with(sk, :user)',
-		// 	ExpressionAttributeValues: {
-		// 		":user": "User#",
-		// 	}
-		// }).promise();
-		// console.log(users);
+	async findAll() : Promise<DynamoDB.DocumentClient.ItemList> {
+		const users = await this.dynamoDB.query({
+			TableName: this.tableName,
+			IndexName: "sk-index",
+			KeyConditionExpression: 'sk = :sk',
+			ProjectionExpression: 'id,sk,email,password',
+			ExpressionAttributeValues: {
+				":sk": "User",
+			},
+
+		}).promise();
+		return users.Items;
+	}
+	async findByEmail(email: string) : Promise<DynamoDB.DocumentClient.AttributeMap|false> {
+		const user = await this.dynamoDB.query({
+			TableName: this.tableName,
+			IndexName: "email-index",
+			KeyConditionExpression: "email = :email",
+			ExpressionAttributeValues:{
+				":email": email
+			}
+		}).promise();
+		return user.Items.length >= 1 ? user.Items[0] : false;
 	}
 	async findOne(id: string) : Promise<DynamoDB.DocumentClient.AttributeMap>{
 		const user = await this.dynamoDB.get({
@@ -46,17 +66,6 @@ class UserRepository implements IUserRepository{
 		return user.Item;
 	}
 
-	async findByEmail(email: string) : Promise<DynamoDB.DocumentClient.AttributeMap|false> {
-		const user = await this.dynamoDB.query({
-			TableName: this.tableName,
-			IndexName: "email-index",
-			KeyConditionExpression: "email = :email",
-			ExpressionAttributeValues:{
-				":email": email
-			}
-		}).promise();
-		return user.Items.length >= 1 ? user.Items[0] : false;
-	}
 }
 
 export {UserRepository};
