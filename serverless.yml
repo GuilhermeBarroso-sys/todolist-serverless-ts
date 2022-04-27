@@ -53,6 +53,8 @@ resources:
               WriteCapacityUnits: 1
 
 functions:
+  authorizerUser:
+      handler: handler.authorizerUser
   registerUser:
     handler: handler.registerUser
     events:
@@ -65,6 +67,11 @@ functions:
       - http:
           path: users/{id}
           method: get
+          authorizer: authorizerUser # execute this before posts.create!
+          identitySource: method.request.header.Authorization
+          resultTtlInSeconds: 3600
+  
+
   authenticateUser:
     handler: handler.authenticateUser
     events:

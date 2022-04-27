@@ -21,7 +21,7 @@ const authenticateUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
 		}
 		const token = sign(user, process.env.jwt_secret, { subject: user.id });
 		delete user.password;
-		return formatJSONResponse({user,token}, 404);
+		return formatJSONResponse({user,token}, 200);
 		
 	} catch(err) {
 		return formatJSONResponse({err: err.message}, 500);

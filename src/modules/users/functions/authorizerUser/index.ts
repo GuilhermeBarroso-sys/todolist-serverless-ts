@@ -1,16 +1,43 @@
+import { verify } from "jsonwebtoken";
 import { formatJSONResponse, ValidatedEventAPIGatewayProxyEvent } from "../../../../lib/api-gateway";
 import schema from "./schema";
-import { UserRepository } from "../../repositories/implements/UserRepository";
+function generateAuthResponse(principalId , effect, methodArn) {
+	const policyDocument = generatePolicyDocument(effect, methodArn);
 
-const authorizerUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+	return {
+		principalId,
+		policyDocument
+	};
+}
+
+function generatePolicyDocument(effect : string, methodArn : string) {
+	if (!effect || !methodArn) return null;
+
+	const policyDocument = {
+		Version: "2012-10-17",
+		Statement: [
+			{
+				Action: "execute-api:Invoke",
+				Effect: effect,
+				Resource: methodArn
+			}
+		]
+	};
+
+	return policyDocument;
+}
+const authorizerUser = async (event, context, callback) => {
+	const token = event.authorizationToken.replace("Bearer ", "");
+	const methodArn = event.methodArn;
+	if (!token || !methodArn) return callback(null, "Unauthorized");
 	try {
-		const {id} = event.pathParameters;
-		const userRepository = new UserRepository();
-		const user = await userRepository.findOne(id);
-		return formatJSONResponse(user, 200);
+		const {sub} = verify(token, process.env.jwt_secret);
+		return callback(null, generateAuthResponse(sub, "Allow", methodArn));
 	} catch(err) {
-		return formatJSONResponse({err: err.message}, 500);
+		return callback(null, generateAuthResponse(err.message, "Deny", methodArn));
+
 	}
+
 };
 
 

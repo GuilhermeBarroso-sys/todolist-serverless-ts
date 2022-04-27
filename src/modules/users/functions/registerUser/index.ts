@@ -1,5 +1,4 @@
 import { bodyParams, formatJSONResponse, ValidatedEventAPIGatewayProxyEvent } from "../../../../lib/api-gateway";
-import {sign} from 'jsonwebtoken';
 import schema from "./schema";
 import { UserRepository } from "../../repositories/implements/UserRepository";
 import {hash} from 'bcryptjs';
