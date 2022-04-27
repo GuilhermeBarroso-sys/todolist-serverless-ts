@@ -1,8 +1,8 @@
 export default {
 	type: "string",
 	properties: {
-		email: { type: 'string' },
-		password: {type: 'string'},
+		id: { type: 'string' },
+
 	},
 	required: []
 } as const;

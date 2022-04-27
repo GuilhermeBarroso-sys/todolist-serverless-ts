@@ -38,7 +38,7 @@ class UserRepository implements IUserRepository{
 		return user.Item;
 	}
 
-	async findByEmail(email: string) : Promise<DynamoDB.DocumentClient.ItemList> {
+	async findByEmail(email: string) : Promise<DynamoDB.DocumentClient.AttributeMap|false> {
 		const user = await this.dynamoDB.scan({
 			TableName: this.tableName,
 			FilterExpression: 'email = :email',
@@ -47,7 +47,7 @@ class UserRepository implements IUserRepository{
 			},
 		
 		}).promise();
-		return user.Items;
+		return user.Items.length == 1 ? user.Items[0] : false;
 	}
 }
 
