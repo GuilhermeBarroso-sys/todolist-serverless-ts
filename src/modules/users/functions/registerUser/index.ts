@@ -1,4 +1,5 @@
 import { bodyParams, formatJSONResponse, ValidatedEventAPIGatewayProxyEvent } from "../../../../lib/api-gateway";
+import {} 
 import schema from "./schema";
 import { UserRepository } from "../../repositories/implements/UserRepository";
 import {hash} from 'bcryptjs';
@@ -17,6 +18,7 @@ const registerUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (e
 			email,
 			password: hashedPassword,
 		});
+
 		return formatJSONResponse('', 201);
 	} catch(err) {
 		return formatJSONResponse({err: err.message}, 400);
