@@ -1,19 +1,36 @@
 import { verify } from "jsonwebtoken";
-import { formatJSONResponse, ValidatedEventAPIGatewayProxyEvent } from "../../../../lib/api-gateway";
-import schema from "./schema";
-function generateAuthResponse(principalId , effect, methodArn) {
-	const policyDocument = generatePolicyDocument(effect, methodArn);
 
+interface IEvent {
+	authorizationToken: string;
+	methodArn: string;
+}
+type TgeneratePolicyDocument = {
+	Version: string;
+	Statement: [
+		{
+			Action: string;
+			Effect: string;
+			Resource: string;
+		}
+	]
+}
+interface IgenerateAuthResponse {
+	principalId: string | (() => string);
+	policyDocument: TgeneratePolicyDocument
+}
+
+function generateAuthResponse(principalId : string | (() => string), effect : string, methodArn : string) : IgenerateAuthResponse {
+	const policyDocument = generatePolicyDocument(effect, methodArn);
 	return {
 		principalId,
 		policyDocument
 	};
 }
 
-function generatePolicyDocument(effect : string, methodArn : string) {
+function generatePolicyDocument(effect : string, methodArn : string) : TgeneratePolicyDocument {
 	if (!effect || !methodArn) return null;
 
-	const policyDocument = {
+	const policyDocument : TgeneratePolicyDocument = {
 		Version: "2012-10-17",
 		Statement: [
 			{
@@ -26,7 +43,7 @@ function generatePolicyDocument(effect : string, methodArn : string) {
 
 	return policyDocument;
 }
-const authorizerUser = async (event, context, callback) => {
+const authorizerUser = async (event : IEvent, context, callback : (arg1 : null, arg2: IgenerateAuthResponse|string) => void) => {
 	const token = event.authorizationToken.replace("Bearer ", "");
 	const methodArn = event.methodArn;
 	if (!token || !methodArn) return callback(null, "Unauthorized");
