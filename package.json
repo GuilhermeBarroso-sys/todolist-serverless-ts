@@ -6,10 +6,10 @@
   "author": "Guilherme Barroso",
   "license": "MIT",
   "scripts": {
-    "dev": "set NODE_ENV=development && sls offline --stage dev development",
-    "deploy:dev": "set NODE_ENV=development && sls deploy --stage dev",
-    "deploy:homolog": "set NODE_ENV=homolog && sls deploy --stage homol",
-    "deploy:production": "set NODE_ENV=production && sls deploy --stage prod"
+    "dev": "sls offline --stage dev development",
+    "deploy:dev": "sls deploy --stage dev",
+    "deploy:homolog": "sls deploy --stage homol",
+    "deploy:production": "sls deploy --stage prod"
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.0",

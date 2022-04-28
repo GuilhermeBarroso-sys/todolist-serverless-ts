@@ -2,7 +2,7 @@ import { formatJSONResponse, ValidatedEventAPIGatewayProxyEvent } from "../../..
 import { UserRepository } from "../../repositories/implements/UserRepository";
 import schema from "./schema";
 
-const findAll: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const findAll: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async () => {
 	try {
 		const userRepository = new UserRepository();
 		const user = await userRepository.findAll();
