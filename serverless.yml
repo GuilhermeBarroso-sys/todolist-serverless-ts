@@ -54,10 +54,11 @@ resources:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1
 functions:
+  # Users
   authorizerUser:
       handler: handler.authorizerUser
-  registerUser:
-    handler: handler.registerUser
+  createUser:
+    handler: handler.createUser
     events:
       - http:
           path: users
@@ -68,21 +69,57 @@ functions:
       - http:
           path: users/{id}
           method: get
-          authorizer: authorizerUser # execute this before posts.create!
-  findAll:
-    handler: handler.findAll
+          authorizer: authorizerUser #
+  findAllUsers:
+    handler: handler.findAllUsers
     events:
       - http:
           path: users
           method: get
-  
-
   authenticateUser:
     handler: handler.authenticateUser
     events:
       - http:
           path: users/authenticate
           method: post
+  # Tasks
+  createTask:
+    handler: handler.createTask
+    events:
+      - http:
+          path: tasks
+          method: post
+          authorizer: authorizerUser 
+  
+  findAllUsersTasks:
+    handler: handler.findAllUsersTasks
+    events:
+      - http:
+          path: tasks
+          method: get
+          authorizer: authorizerUser 
+  findByTaskStatus:
+    handler: handler.findByTaskStatus
+    events:
+      - http:
+          path: tasks/{status}
+          method: get
+          authorizer: authorizerUser
+  updateTask:
+    handler: handler.updateTask
+    events:
+      - http:
+          path: tasks/{id}
+          method: put
+          authorizer: authorizerUser 
+  deleteTask:
+    handler: handler.deleteTask
+    events:
+      - http:
+          path: tasks/{id}
+          method: delete
+          authorizer: authorizerUser
+  
   
       
 

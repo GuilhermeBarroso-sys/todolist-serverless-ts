@@ -9,7 +9,7 @@ const findUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event
 		const user = await userRepository.findOne(id);
 		return formatJSONResponse(user, 200);
 	} catch(err) {
-		return formatJSONResponse({err: err.message}, 500);
+		return formatJSONResponse({err: err.message}, 400);
 	}
 };
 

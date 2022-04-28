@@ -2,14 +2,13 @@ import { bodyParams, formatJSONResponse, ValidatedEventAPIGatewayProxyEvent } fr
 import schema from "./schema";
 import { UserRepository } from "../../repositories/implements/UserRepository";
 import {hash} from 'bcryptjs';
-const registerUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const createUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
 	try {
 		const {name,email,password} = bodyParams(event.body, ['name', 'email', 'password']);
     
 		const userRepository = new UserRepository();
 		const hashedPassword = await hash(password, 10);
 		const alreadyExists = await userRepository.findByEmail(email);
-		console.log(alreadyExists);
 		if(alreadyExists) {
 			throw new Error("this email already been used!");
 		}
@@ -25,4 +24,4 @@ const registerUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (e
 };
 
 
-export { registerUser }; 
+export { createUser }; 

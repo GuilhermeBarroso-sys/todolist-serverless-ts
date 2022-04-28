@@ -24,7 +24,7 @@ const authenticateUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
 		return formatJSONResponse({user,token}, 200);
 		
 	} catch(err) {
-		return formatJSONResponse({err: err.message}, 500);
+		return formatJSONResponse({err: err.message}, 400);
 	}
 };
 
