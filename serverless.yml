@@ -26,7 +26,7 @@ custom:
   tableName: ${opt:stage, 'dev'}_users
   esbuild:
     bundle: true
-    minify: true
+    minify: false
     watch:
       pattern: ['src/**/*.ts']
       ignore: ['.esbuild', 'dist', 'node_modules', '.serverless']
@@ -43,8 +43,6 @@ resources:
                 AttributeType: S
               - AttributeName: sk
                 AttributeType: S
-              - AttributeName: email
-                AttributeType: S
             KeySchema:
               - AttributeName: id
                 KeyType: HASH
@@ -53,6 +51,13 @@ resources:
             ProvisionedThroughput:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1
+        GatewayResponseDefault4XX:
+          Type: 'AWS::ApiGateway::GatewayResponse'
+          Properties:
+            ResponseParameters:
+              gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+              gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+            ResponseType: DEFAULT_4XX
 functions:
   # Users
   authorizerUser:
@@ -63,12 +68,14 @@ functions:
       - http:
           path: users
           method: post
+          cors: true
   findUser:
     handler: handler.findUser
     events:
       - http:
-          path: users/{id}
+          path: users/{user_id}
           method: get
+          cors: true
           authorizer: authorizerUser #
   findAllUsers:
     handler: handler.findAllUsers
@@ -76,6 +83,7 @@ functions:
       - http:
           path: users
           method: get
+          cors: true
   authenticateUser:
     handler: handler.authenticateUser
     events:
@@ -89,6 +97,7 @@ functions:
       - http:
           path: tasks
           method: post
+          cors: true
           authorizer: authorizerUser 
   
   findAllUsersTasks:
@@ -97,27 +106,31 @@ functions:
       - http:
           path: tasks
           method: get
+          cors: true
           authorizer: authorizerUser 
   findByTaskStatus:
     handler: handler.findByTaskStatus
     events:
       - http:
-          path: tasks/{status}
+          path: tasks/status/{status}
           method: get
+          cors: true
           authorizer: authorizerUser
   updateTask:
     handler: handler.updateTask
     events:
       - http:
-          path: tasks/{id}
+          path: tasks/update/{task_id}
           method: put
+          cors: true
           authorizer: authorizerUser 
   deleteTask:
     handler: handler.deleteTask
     events:
       - http:
-          path: tasks/{id}
+          path: tasks/delete/{task_id}
           method: delete
+          cors: true
           authorizer: authorizerUser
   
   

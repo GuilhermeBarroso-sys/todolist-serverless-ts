@@ -12,7 +12,7 @@ const createUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
 		if(alreadyExists) {
 			throw new Error("this email already been used!");
 		}
-		userRepository.create({
+		await userRepository.create({
 			name,
 			email,
 			password: hashedPassword,

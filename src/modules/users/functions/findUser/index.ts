@@ -4,7 +4,7 @@ import { UserRepository } from "../../repositories/implements/UserRepository";
 
 const findUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
 	try {
-		const {id} = event.pathParameters;
+		const {user_id : id} = event.pathParameters;
 		const userRepository = new UserRepository();
 		const user = await userRepository.findOne(id);
 		return formatJSONResponse(user, 200);
