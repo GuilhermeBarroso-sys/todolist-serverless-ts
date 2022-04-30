@@ -58,6 +58,8 @@ resources:
               gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
               gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
             ResponseType: DEFAULT_4XX
+            RestApiId:
+              Ref: 'ApiGatewayRestApi'
 functions:
   # Users
   authorizerUser:
@@ -68,14 +70,25 @@ functions:
       - http:
           path: users
           method: post
-          cors: true
+          cors: 
+            origin: '*' # <-- Specify allowed origin
+            headers: # <-- Specify allowed headers
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
+
   findUser:
     handler: handler.findUser
     events:
       - http:
           path: users/{user_id}
           method: get
-          cors: true
+         
+
           authorizer: authorizerUser #
   findAllUsers:
     handler: handler.findAllUsers
@@ -83,7 +96,8 @@ functions:
       - http:
           path: users
           method: get
-          cors: true
+         
+
   authenticateUser:
     handler: handler.authenticateUser
     events:
@@ -97,7 +111,18 @@ functions:
       - http:
           path: tasks
           method: post
-          cors: true
+          cors: 
+            origin: '*' # <-- Specify allowed origin
+            headers: # <-- Specify allowed headers
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
+         
+
           authorizer: authorizerUser 
   
   findAllUsersTasks:
@@ -106,7 +131,18 @@ functions:
       - http:
           path: tasks
           method: get
-          cors: true
+          cors: 
+            origin: '*' # <-- Specify allowed origin
+            headers: # <-- Specify allowed headers
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
+         
+
           authorizer: authorizerUser 
   findByTaskStatus:
     handler: handler.findByTaskStatus
@@ -114,7 +150,18 @@ functions:
       - http:
           path: tasks/status/{status}
           method: get
-          cors: true
+          cors: 
+            origin: '*' # <-- Specify allowed origin
+            headers: # <-- Specify allowed headers
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
+         
+
           authorizer: authorizerUser
   updateTask:
     handler: handler.updateTask
@@ -122,7 +169,18 @@ functions:
       - http:
           path: tasks/update/{task_id}
           method: put
-          cors: true
+          cors: 
+            origin: '*' # <-- Specify allowed origin
+            headers: # <-- Specify allowed headers
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
+         
+
           authorizer: authorizerUser 
   deleteTask:
     handler: handler.deleteTask
@@ -130,7 +188,18 @@ functions:
       - http:
           path: tasks/delete/{task_id}
           method: delete
-          cors: true
+          cors: 
+            origin: '*' # <-- Specify allowed origin
+            headers: # <-- Specify allowed headers
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
+         
+
           authorizer: authorizerUser
   
   
