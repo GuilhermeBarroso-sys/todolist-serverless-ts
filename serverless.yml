@@ -87,16 +87,51 @@ functions:
       - http:
           path: users/{user_id}
           method: get
-         
-
           authorizer: authorizerUser #
+          cors: 
+            origin: '*' # <-- Specify allowed origin
+            headers: # <-- Specify allowed headers
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
+  findAuthenticateUser:
+    handler: handler.findAuthenticateUser
+    events:
+      - http:
+          path: users/authenticate
+          method: get
+          authorizer: authorizerUser #
+          cors: 
+            origin: '*' # <-- Specify allowed origin
+            headers: # <-- Specify allowed headers
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
+  
   findAllUsers:
     handler: handler.findAllUsers
     events:
       - http:
           path: users
           method: get
-         
+          cors: 
+            origin: '*' # <-- Specify allowed origin
+            headers: # <-- Specify allowed headers
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
 
   authenticateUser:
     handler: handler.authenticateUser
@@ -104,6 +139,16 @@ functions:
       - http:
           path: users/authenticate
           method: post
+          cors: 
+            origin: '*' # <-- Specify allowed origin
+            headers: # <-- Specify allowed headers
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
   # Tasks
   createTask:
     handler: handler.createTask
@@ -121,8 +166,6 @@ functions:
               - X-Amz-Security-Token
               - X-Amz-User-Agent
             allowCredentials: false
-         
-
           authorizer: authorizerUser 
   
   findAllUsersTasks:
@@ -141,9 +184,8 @@ functions:
               - X-Amz-Security-Token
               - X-Amz-User-Agent
             allowCredentials: false
-         
-
           authorizer: authorizerUser 
+
   findByTaskStatus:
     handler: handler.findByTaskStatus
     events:
@@ -198,8 +240,6 @@ functions:
               - X-Amz-Security-Token
               - X-Amz-User-Agent
             allowCredentials: false
-         
-
           authorizer: authorizerUser
   
   

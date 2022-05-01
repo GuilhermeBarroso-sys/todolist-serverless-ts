@@ -2,13 +2,7 @@ import {DynamoDB} from 'aws-sdk';
 import {v4 as uuid}  from 'uuid';
 import { isInvalidParam } from '../../../../lib/api-gateway';
 import { IUser, IUserRepository } from '../IUserRepository';
-interface IDTOUser {
-	id: string;
-	sk: string;
-	name: string;
-	email: string;
-	password: string;
-}
+
 class UserRepository implements IUserRepository{
 	private tableName = process.env.dynamodb_table;
 	private dynamoDB : DynamoDB.DocumentClient;
@@ -23,7 +17,7 @@ class UserRepository implements IUserRepository{
 		await this.dynamoDB.put({
 			Item: {
 				id,
-				sk: `User`,
+				sk: `User#${id}`,
 				name,
 				email,
 				password
@@ -64,6 +58,7 @@ class UserRepository implements IUserRepository{
 			TableName: this.tableName,
 		}).promise();
 		return user.Item;
+
 	}
 
 }
