@@ -1,7 +1,9 @@
 # package directories
 node_modules
 jspm_packages
-
+.env.prod.yml
+.env.dev.yml
+.env.homol.yml
 # Serverless directories
 .serverless
 
