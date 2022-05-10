@@ -22,7 +22,7 @@ provider:
       Resource: "*"
 custom:
   dotenv:
-    path: .env.${opt:stage, 'dev'}.yml
+    path: env/.env.${opt:stage, 'dev'}.yml
   tableName: ${opt:stage, 'dev'}_users
   esbuild:
     bundle: true
