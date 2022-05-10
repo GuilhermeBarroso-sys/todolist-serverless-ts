@@ -1,7 +1,8 @@
-import {DynamoDB} from 'aws-sdk';
+import {AWSError, DynamoDB} from 'aws-sdk';
+import { PromiseResult } from 'aws-sdk/lib/request';
 import {v4 as uuid}  from 'uuid';
 import { isInvalidParam } from '../../../../lib/api-gateway';
-import { IDTOUpdateTask, ITask, ITaskRepository } from '../ITaskRepository';
+import { IDTOUpdateTask, ITask, ITaskRepository, TodoCreateResponse } from '../ITaskRepository';
 
 class TaskRepository implements ITaskRepository{
 	private tableName = process.env.dynamodb_table;
@@ -27,7 +28,7 @@ class TaskRepository implements ITaskRepository{
 
 	}
  
-	async create({name, user_id}: ITask): Promise<void> {
+	async create({name, user_id}: ITask): Promise<TodoCreateResponse> {
 		if(isInvalidParam([name, user_id])) {
 			throw new Error("invalid param value!");
 		}
@@ -41,6 +42,13 @@ class TaskRepository implements ITaskRepository{
 			},
 			TableName: this.tableName
 		}).promise();
+		const task : TodoCreateResponse = {
+			id,
+			sk: `Todo#${user_id}`,
+			name,
+			status: false
+		};
+		return task;
 	}
 
 	async findAll(user_id : string) : Promise<DynamoDB.DocumentClient.ItemList> {

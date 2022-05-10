@@ -1,5 +1,11 @@
-import { DynamoDB } from "aws-sdk";
-
+import { AWSError, DynamoDB } from "aws-sdk";
+import { PromiseResult } from "aws-sdk/lib/request";
+export interface TodoCreateResponse {
+	id: string
+	sk: string
+	name: string
+	status:  boolean
+}
 export interface ITask {
 	id?: string;
 	user_id: string;
@@ -12,7 +18,7 @@ export interface IDTOUpdateTask  {
 	status: string;
 }
 export interface ITaskRepository {
-	create({user_id,name} : ITask) : Promise<void>
+	create({user_id,name} : ITask) : Promise<TodoCreateResponse>
 	findAll(user_id : string) : Promise<DynamoDB.DocumentClient.ItemList>
 	findOne(id: string, user_id: string) : Promise<DynamoDB.DocumentClient.AttributeMap>
 	update(user_id: string, {task_id, name,status} : IDTOUpdateTask) : Promise<void>

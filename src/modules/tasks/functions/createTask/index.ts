@@ -6,8 +6,8 @@ const createTask: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
 		const { name } = bodyParams(event.body, ['name']);
 		const {principalId : user_id} = event.requestContext.authorizer;
 		const taskRepository = new TaskRepository();
-		taskRepository.create({name,user_id});
-		return formatJSONResponse('', 201);
+		const task = await taskRepository.create({name,user_id});
+		return formatJSONResponse(task, 201);
 	} catch(err) {
 		return formatJSONResponse({err: err.message}, 400);
 	}
