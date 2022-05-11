@@ -19,6 +19,7 @@ provider:
         - dynamodb:Scan
         - dynamodb:GetItem
         - dynamodb:PutItem
+        - dynamodb:DeleteItem
       Resource: "*"
 custom:
   dotenv:
@@ -35,6 +36,7 @@ package:
 resources:
       Resources:
         Users:
+        
           Type: AWS::DynamoDB::Table
           Properties:
             TableName: ${self:custom.tableName}

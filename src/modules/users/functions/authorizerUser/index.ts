@@ -44,9 +44,11 @@ function generatePolicyDocument(effect : string, methodArn : string) : Tgenerate
 	return policyDocument;
 }
 const authorizerUser = async (event : IEvent, context, callback : (arg1 : null, arg2: IgenerateAuthResponse|string) => void) => {
+
 	const token = event.authorizationToken.replace("Bearer ", "");
 	const methodArn = event.methodArn;
-	if (!token || !methodArn) return callback(null, "Unauthorized");
+
+	if (!token) return callback(null, "Unauthorized");
 	try {
 		const {sub} = verify(token, process.env.jwt_secret);
 		return callback(null, generateAuthResponse(sub, "Allow", methodArn));
