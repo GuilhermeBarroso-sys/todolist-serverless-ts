@@ -15,11 +15,7 @@ provider:
     - Effect: Allow
       Action:
         - s3:*
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:DeleteItem
+        - dynamodb:*
       Resource: "*"
 custom:
   dotenv:
