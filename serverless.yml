@@ -1,3 +1,5 @@
+org: guilhermebarroso
+app: todo-serverless
 service: aws-nodejs-typescript-s3
 
 plugins:

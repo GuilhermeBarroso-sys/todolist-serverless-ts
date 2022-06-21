@@ -14,18 +14,20 @@ import { deleteTask  as deleteTaskExport} from './src/modules/tasks/functions/de
 import { findByTaskStatus as findByTaskStatusExport } from './src/modules/tasks/functions/findByTaskStatus';
 import middy from 'middy';
 import {cors} from 'middy/middlewares';
-
-export const createUser = middy(createUserExport).use(cors());
-export const findUser = middy(findUserExport).use(cors());
-export const findAuthenticateUser = middy(findAuthenticateUserExport).use(cors());
-export const findAllUsers = middy(findAllUsersExport).use(cors());
-export const authenticateUser = middy(authenticateUserExport).use(cors());
-export const authorizerUser = middy(authorizerUserExport).use(cors());
-export const createTask = middy(createTaskExport).use(cors());
-export const findAllUsersTasks = middy(findAllUsersTasksExport).use(cors());
-export const updateTask = middy(updateTaskExport).use(cors());
-export const deleteTask = middy(deleteTaskExport).use(cors());
-export const findByTaskStatus = middy(findByTaskStatusExport).use(cors());
+const corsConfig = {
+	origin: process.env.NODE_ENV == 'production' ? 'https://todo.devgui.info' : '*'
+};
+export const createUser = middy(createUserExport).use(cors(corsConfig));
+export const findUser = middy(findUserExport).use(cors(corsConfig));
+export const findAuthenticateUser = middy(findAuthenticateUserExport).use(cors(corsConfig));
+export const findAllUsers = middy(findAllUsersExport).use(cors(corsConfig));
+export const authenticateUser = middy(authenticateUserExport).use(cors(corsConfig));
+export const authorizerUser = middy(authorizerUserExport).use(cors(corsConfig));
+export const createTask = middy(createTaskExport).use(cors(corsConfig));
+export const findAllUsersTasks = middy(findAllUsersTasksExport).use(cors(corsConfig));
+export const updateTask = middy(updateTaskExport).use(cors(corsConfig));
+export const deleteTask = middy(deleteTaskExport).use(cors(corsConfig));
+export const findByTaskStatus = middy(findByTaskStatusExport).use(cors(corsConfig));
 
 
 
